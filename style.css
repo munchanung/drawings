@@ -1,140 +1,245 @@
-/* ===== 색상: 여기 값만 바꾸면 사이트 전체 색이 바뀌어요 ===== */
+/* ===== 색상: 여기 값만 바꾸면 전시장 분위기가 바뀌어요 ===== */
 :root {
-  --paper: #eef1f4;
-  --card: #ffffff;
-  --ink: #1f2a44;
-  --pencil: #6b7380;
-  --tape: rgba(242, 201, 76, 0.8);
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #1b2130;
-    --card: #262d3d;
-    --ink: #e8ebf2;
-    --pencil: #9aa3b5;
-    --tape: rgba(242, 201, 76, 0.6);
-  }
+  --wall: #1e1d1b;        /* 전시장 벽 */
+  --floor: #151412;       /* 바닥 */
+  --light: 255, 236, 208; /* 조명 색 (따뜻한 백색) */
+  --text: #ebe5db;        /* 글자 */
+  --muted: #8f897f;       /* 흐린 글자 */
+  --serif: "Nanum Myeongjo", "AppleMyungjo", "Batang", serif;
+  --sans: "Gowun Dodum", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: "Gowun Dodum", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--wall);
+  color: var(--text);
+  font-family: var(--sans);
   line-height: 1.7;
   overflow-x: hidden;
 }
-.pen { font-family: "Nanum Pen Script", cursive; font-weight: 400; line-height: 1.05; }
 
-/* 공통: 스크롤하는 동안 화면에 붙어 있는 칸 */
-.stage { position: relative; }
+.room { position: relative; }
 .sticky {
   position: sticky;
   top: 0;
   height: 100vh;
   overflow: hidden;
+  /* 벽과 바닥: 아래 22%를 바닥처럼 어둡게 */
+  background: linear-gradient(to bottom, var(--wall) 78%, var(--floor) 78%);
 }
 
-/* ===== 1. 첫 화면: 그림이 천천히 확대 ===== */
-.hero { height: 220vh; }
-.hero .sticky { background: #000; }
-.hero img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: contain;   /* 그림이 잘리지 않게 전체를 보여줘요 */
-  padding: 5vh 4vw 27vh;
-  transform-origin: 50% 40%;
-}
-.hero .title {
-  position: absolute;
-  left: 6vw; bottom: 6vh;
-  color: #fff;
-}
-.hero h1 { font-size: clamp(48px, min(11vw, 14vh), 140px); margin: 0; }
-.hero p { margin: 8px 0 0; font-size: 17px; opacity: 0.9; }
-.hint {
-  position: absolute; right: 6vw; bottom: 6vh;
-  color: #fff; font-size: 14px; opacity: 0.85;
+/* ===== 안내판 ===== */
+.sign {
+  position: fixed;
+  top: 24px; left: 28px;
+  z-index: 20;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  transition: opacity 0.4s;
 }
 
-/* ===== 2. 옆으로 흘러가는 그림 줄 ===== */
-.shelf .sticky {
+/* ===== 마우스를 따라오는 빛 ===== */
+.torch {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  background: radial-gradient(circle 260px at var(--mx, -999px) var(--my, -999px),
+              rgba(var(--light), 0.07), transparent 70%);
+}
+
+/* ===== 작품 설명표 (전시장 벽에 붙은 작은 카드) ===== */
+.label {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  cursor: grab;
-  user-select: none;
+  gap: 2px;
+  width: 190px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
 }
-.shelf .sticky.dragging { cursor: grabbing; }
-.intro { width: clamp(240px, 30vw, 380px); flex-shrink: 0; align-self: center; }
-.intro h2 { font-size: clamp(44px, 5.5vw, 72px); margin: 0 0 12px; }
-.intro p { color: var(--pencil); margin: 0; }
+.label .no { font-size: 12px; }
+.label strong {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 19px;
+  color: var(--text);
+}
+
+/* ===== 입구 ===== */
+.entrance { height: 320vh; }
+.ent-title {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding-bottom: 10vh;
+}
+.ent-title h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(48px, 9vw, 120px);
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+.ent-title p {
+  margin: 16px 0 0;
+  color: var(--muted);
+  letter-spacing: 0.3em;
+  font-size: 14px;
+}
+.pool {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 34% 52% at 50% 42%, rgba(var(--light), 0.16), transparent 72%);
+  opacity: 0;
+}
+.ent-work {
+  position: absolute;
+  left: 50%; top: 42%;
+  width: min(64vw, 72vh);
+  margin: 0;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+.ent-work img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.6));
+}
+.ent-label {
+  position: absolute;
+  right: 7vw; bottom: 26vh;
+  opacity: 0;
+}
+.hint {
+  position: absolute;
+  left: 50%; bottom: 8vh;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: var(--muted);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+@keyframes breathe { 50% { opacity: 0.35; } }
+
+/* ===== 전시실 ===== */
+.hall .sticky { cursor: grab; user-select: none; }
+.hall .sticky.dragging { cursor: grabbing; }
 .track {
+  position: absolute;
+  left: 0; bottom: 24vh;
   display: flex;
-  gap: 6vw;
-  padding: 0 6vw;
+  align-items: flex-end;
+  gap: 14vw;
+  padding: 0 12vw;
   width: max-content;
-  align-items: center;
   will-change: transform;
 }
-.drawing {
+.wall-text { width: 300px; flex-shrink: 0; padding-bottom: 8vh; }
+.wall-text h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(36px, 4.5vw, 56px);
+  letter-spacing: 0.08em;
+  margin: 0 0 12px;
+}
+.wall-text p { color: var(--muted); margin: 0; }
+
+.work {
   margin: 0;
-  width: clamp(240px, min(32vw, 52vh), 440px);
-  background: var(--card);
-  padding: 12px 12px 16px;
-  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 36px;
   flex-shrink: 0;
 }
-.drawing:nth-child(odd)  { transform: rotate(-1.2deg) translateY(4vh); }
-.drawing:nth-child(even) { transform: rotate(0.9deg) translateY(-3vh); }
-.drawing .frame { overflow: hidden; aspect-ratio: 4 / 5; background: var(--paper); }
-.drawing img {
-  width: 100%; height: 100%;
-  object-fit: cover;
+.piece { position: relative; }
+.piece img {
+  position: relative;
   display: block;
+  height: min(54vh, 95vw);
+  width: auto;
+  box-shadow: 0 28px 50px rgba(0, 0, 0, 0.55);
   pointer-events: none;
-  will-change: transform;
+  will-change: filter;
 }
-.drawing figcaption { font-family: "Nanum Pen Script", cursive; font-size: 26px; line-height: 1.2; margin-top: 10px; }
-.drawing small { font-family: "Gowun Dodum", sans-serif; color: var(--pencil); font-size: 14px; }
+/* 천장 조명이 그림을 비추는 빛 */
+.light {
+  position: absolute;
+  left: 50%; top: -18vh;
+  width: 260%; height: calc(100% + 30vh);
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse 34% 48% at 50% 52%, rgba(var(--light), 0.26), transparent 72%);
+  pointer-events: none;
+}
 
-/* ===== 그림 설명 ===== */
+/* ===== 작가의 말 ===== */
 .statement {
-  max-width: 34em;
+  max-width: 30em;
   margin: 0 auto;
-  padding: 20vh 24px;
-  font-size: clamp(17px, 2vw, 20px);
-  line-height: 2;
+  padding: 45vh 24px;
+  font-family: var(--serif);
+  font-size: clamp(19px, 2.3vw, 25px);
+  line-height: 2.1;
 }
-.statement p { margin: 0 0 1.6em; }
+.statement p { margin: 0 0 2em; }
 .statement p:last-child { margin-bottom: 0; }
+.statement span { transition: opacity 0.3s; }
 
-/* ===== 3. 작은 창에서 화면 전체로 커지는 그림 ===== */
+/* ===== 작업실 ===== */
 .reveal { height: 260vh; }
-.reveal .window {
-  position: absolute; inset: 0;
-  will-change: clip-path;
-}
-.reveal video {
+.reveal .sticky { background: var(--floor); }
+.window { position: absolute; inset: 0; will-change: clip-path; }
+.window video {
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
+  filter: brightness(0.85);
   will-change: transform;
 }
-.reveal .caption {
-  position: absolute; left: 6vw; bottom: 10vh;
-  color: #fff;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+.caption {
+  position: absolute;
+  left: 7vw; bottom: 10vh;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
 }
-.reveal .caption h2 { font-size: clamp(48px, 9vw, 110px); margin: 0; }
-.reveal .caption p { margin: 4px 0 0; }
+.caption h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 7vw, 88px);
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+.caption p { margin: 6px 0 0; color: #d8d2c8; }
 
-footer { text-align: center; color: var(--pencil); font-size: 14px; padding: 48px 24px; }
+/* ===== 출구 ===== */
+.exit {
+  height: 70vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  background: var(--floor);
+}
+.exit p { font-family: var(--serif); font-size: 20px; margin: 0; }
+.exit small { color: var(--muted); }
 
-/* 움직임 줄이기 설정을 켠 사람에게는 애니메이션 없이 보여줘요 */
+/* ===== 폰 화면 ===== */
+@media (max-width: 700px) {
+  .work { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .piece img { height: 46vh; }
+  .track { bottom: 16vh; gap: 20vw; }
+  .ent-label { right: auto; left: 7vw; bottom: 12vh; }
+  .torch { display: none; }
+}
+
+/* ===== 움직임 줄이기 설정을 켠 사람에게는 정지 화면으로 ===== */
 @media (prefers-reduced-motion: reduce) {
-  .hero, .reveal { height: auto; }
-  .sticky { position: relative; }
+  .entrance, .reveal { height: auto; }
+  .sticky { position: relative; height: auto; min-height: 100vh; }
+  .ent-title { position: relative; height: 60vh; }
+  .pool, .ent-work, .ent-label { opacity: 1; }
+  .ent-work { position: relative; left: auto; top: auto; transform: none; margin: 0 auto; }
+  .ent-label { position: relative; right: auto; bottom: auto; margin: 32px auto 80px; }
+  .hint { display: none; }
+  .track { position: relative; overflow-x: auto; width: 100%; padding: 15vh 12vw; }
 }
-  
