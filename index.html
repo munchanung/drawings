@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>찬웅의 그림첩</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gowun+Dodum&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!--
+    그림 바꾸는 법: images 폴더에 그림을 넣고 src="images/파일이름" 부분만 바꿔요.
+    제목·설명 글자도 이 파일에서 바로 고치면 돼요.
+  -->
+
+  <!-- 1. 첫 화면: 얼굴 콜라주 -->
+  <section class="stage hero" id="hero">
+    <div class="sticky">
+      <picture>
+        <!-- 폰처럼 세로 화면에서는 세로 사진을 보여줘요 -->
+        <source media="(orientation: portrait)" srcset="images/face-collage-tall.jpg">
+        <img src="images/face-collage.jpg" alt="회색, 주황, 노랑 종이 세 장을 이어 붙여 그린 얼굴">
+      </picture>
+      <div class="title">
+        <h1 class="pen">찬웅의 그림첩</h1>
+        <p>틈틈이 그린 그림들을 모아 두는 곳</p>
+      </div>
+      <div class="hint">아래로 스크롤해 보세요</div>
+    </div>
+  </section>
+
+  <!-- 2. 옆으로 흘러가는 그림 줄 (마우스로 잡아끌어도 움직여요) -->
+  <section class="stage shelf" id="shelf">
+    <div class="sticky" id="shelf-sticky">
+      <div class="track" id="track">
+
+        <div class="intro">
+          <h2 class="pen">파란 얼굴들</h2>
+          <p>파란색 하나로 얼굴을 그려 봤어요. 옆으로 넘기면서 보세요.</p>
+        </div>
+
+        <figure class="drawing">
+          <div class="frame"><img src="images/blue-base.jpg" alt="캔버스 전체를 파란 물감으로 칠한 밑칠 단계"></div>
+          <figcaption>밑칠<br><small>파랑으로 캔버스를 덮은 첫 단계</small></figcaption>
+        </figure>
+
+        <figure class="drawing">
+          <div class="frame"><img src="images/blue-face.jpg" alt="파란 바탕 위에 짧은 붓질로 찍어 그린 얼굴"></div>
+          <figcaption>파란 얼굴<br><small>짧은 붓질을 찍어서 얼굴을 만들었어요</small></figcaption>
+        </figure>
+
+        <figure class="drawing">
+          <div class="frame"><img src="images/blue-white.jpg" alt="파랑과 하양 물감을 두껍게 섞어 그린 얼굴"></div>
+          <figcaption>파랑과 하양<br><small>두 색을 두껍게 섞어 바른 얼굴</small></figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 마지막: 작은 창에서 화면 가득 커지는 작업 영상 -->
+  <section class="stage reveal" id="reveal">
+    <div class="sticky">
+      <div class="window" id="window">
+        <video src="videos/studio.mp4" poster="images/studio-poster.jpg"
+               autoplay muted loop playsinline></video>
+      </div>
+      <div class="caption" id="caption">
+        <h2 class="pen">작업실에서</h2>
+        <p>이젤 위에서 마르고 있는 그림</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>GitHub Pages로 만든 그림첩</footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
